@@ -5,7 +5,6 @@ import networkx as nx
 from networkx import Graph
 
 
-# TODO: Improve current step visualisation
 class AStarVisualiser:
 
     def visualise_a_star(self,
@@ -80,6 +79,7 @@ class AStarVisualiser:
                          target_node,
                          node_highlight_color='yellow',
                          animation_delay=2):
+        explored_path = path + [current_node]
         plt.clf()
         nx.draw(graph, layout, with_labels=True, node_color='lightblue', edge_color='gray', node_size=700,
                 font_size=15)
@@ -88,8 +88,8 @@ class AStarVisualiser:
         nx.draw_networkx_nodes(graph, layout, nodelist=path + [current_node], node_color=node_highlight_color)
         nx.draw_networkx_nodes(graph, layout, nodelist=[start_node], node_color='white')
         nx.draw_networkx_nodes(graph, layout, nodelist=[target_node], node_color='red')
-        nx.draw_networkx_edges(graph, layout, edgelist=[(path[i], path[i + 1]) for i in range(len(path) - 1)],
-                               edge_color='red', width=2.5)
+        nx.draw_networkx_edges(graph, layout, edgelist=[(explored_path[i], explored_path[i + 1]) for i in range(len(explored_path) - 1)],
+                               edge_color='orange', width=2.5)
         if animation_delay > 0:
             plt.pause(animation_delay)
 
@@ -116,5 +116,5 @@ class AStarVisualiser:
         for node, neighbors in neighbour_matrix.items():
             for neighbor, weight in neighbors:
                 g.add_edge(node, neighbor, weight=weight)
-        pos = nx.spring_layout(g)
-        return g, pos
+        layout = nx.spring_layout(g, iterations=100)
+        return g, layout
