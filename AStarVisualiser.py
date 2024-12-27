@@ -5,7 +5,6 @@ import networkx as nx
 from networkx import Graph
 
 
-# TODO: Docs/comments in bulgarian
 # TODO: Improve current step visualisation
 class AStarVisualiser:
 
@@ -37,8 +36,8 @@ class AStarVisualiser:
         G, layout = self.__initialise_nx_graph(graph)
 
         while open_set:
-            f_score, current_node, g_score, path = heapq.heappop(open_set)
-            print(f'Best next node: {current_node}')
+            _, current_node, g_score, path = heapq.heappop(open_set)
+            print(f'Най-добър следващ възел: {current_node}')
 
             if current_node == goal_node:
                 path = path + [current_node]
@@ -61,7 +60,14 @@ class AStarVisualiser:
                         open_set,
                         (tentative_g_score + heuristic[neighbor], neighbor, tentative_g_score, path + [current_node])
                     )
-                    print(f"Current node: {current_node}, looking at {neighbor} with weight {weight}, g_score: {tentative_g_score}, path: {path}, open_set: {open_set}")
+                    print(
+                        f"Текущ възел: {current_node}\n"
+                        f"  Съсед: {neighbor}\n"
+                        f"  Тегло: {weight}\n"
+                        f"  Временен g_score: {tentative_g_score}\n"
+                        f"  Текущ път: {path}\n"
+                        f"  Отворено списък:\n     " + "\n    ".join([f"{item}" for item in open_set]) + "\n"
+                    )
 
         return None, float('inf')
 
@@ -102,9 +108,9 @@ class AStarVisualiser:
     @staticmethod
     def __initialise_nx_graph(neighbour_matrix: dict):
         """
-        Construct nx graph from a neighbour matrix
-        :param neighbour_matrix: dict listing neighbouring nodes and weights for each node in the graph
-        :return: g - constructed nx graph, pos - graph layout dict
+        Конструира nx граф от матрица на съседство.
+        :param neighbour_matrix: dict, описващ съседните възли и теглата за всеки възел в графа.
+        :return: g - конструиран nx граф, layout - dict с координати на възлите на графа.
         """
         g = nx.Graph()
         for node, neighbors in neighbour_matrix.items():
